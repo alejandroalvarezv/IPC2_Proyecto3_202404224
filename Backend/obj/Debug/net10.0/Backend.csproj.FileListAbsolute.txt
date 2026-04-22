@@ -31,3 +31,4 @@ C:\Users\aleja\Documents\Proyecto3 IPC2\Backend\obj\Debug\net10.0\refint\Backend
 C:\Users\aleja\Documents\Proyecto3 IPC2\Backend\obj\Debug\net10.0\Backend.pdb
 C:\Users\aleja\Documents\Proyecto3 IPC2\Backend\obj\Debug\net10.0\Backend.genruntimeconfig.cache
 C:\Users\aleja\Documents\Proyecto3 IPC2\Backend\obj\Debug\net10.0\ref\Backend.dll
+C:\Users\aleja\Documents\Proyecto3 IPC2\Backend\obj\Debug\net10.0\Backend.sourcelink.json
