@@ -38,7 +38,6 @@ namespace Backend.Controllers
                 var fecha = f.Element("fecha")?.Value.Trim();
                 var valorStr = f.Element("valor")?.Value.Trim();
 
-                // Verificar duplicado
                 if (facturas.Any(x => x.NumeroFactura == numero))
                 {
                     facturasDuplicadas++;
@@ -53,7 +52,6 @@ namespace Backend.Controllers
                     continue;
                 }
 
-                // Si el cliente tiene saldo a favor, aplicarlo
                 if (cliente.Saldo < 0)
                 {
                     double saldoFavor = Math.Abs(cliente.Saldo);
@@ -91,7 +89,6 @@ namespace Backend.Controllers
                 var nit = p.Element("NITcliente")?.Value.Trim();
                 var valorStr = p.Element("valor")?.Value.Trim();
 
-                // Verificar duplicado (mismo banco, fecha, nit y valor)
                 if (pagos.Any(x => x.NITCliente == nit && x.Fecha == fecha
                     && x.CodigoBanco.ToString() == codigoStr && x.Valor.ToString() == valorStr))
                 {
@@ -117,7 +114,6 @@ namespace Backend.Controllers
                 });
                 nuevosPagos++;
 
-                // Abonar a facturas pendientes (de más antigua a más reciente)
                 var facturasPendientes = facturas
                     .Where(f => f.NITCliente == nit && f.SaldoPendiente > 0)
                     .OrderBy(f => f.Fecha)
@@ -141,7 +137,6 @@ namespace Backend.Controllers
                     }
                 }
 
-                // Si sobra dinero, queda como saldo a favor (negativo)
                 if (montoRestante > 0)
                 {
                     cliente.Saldo -= montoRestante;
