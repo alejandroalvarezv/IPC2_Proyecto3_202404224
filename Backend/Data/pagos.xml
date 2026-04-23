@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<pagos>
+  <pago>
+    <codigoBanco>1</codigoBanco>
+    <fecha>31/03/2024</fecha>
+    <NITCliente>399399-K</NITCliente>
+    <valor>300</valor>
+  </pago>
+</pagos>

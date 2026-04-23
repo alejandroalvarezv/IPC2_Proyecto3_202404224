@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<bancos>
+  <banco>
+    <codigo>1</codigo>
+    <nombre>Banco Industrial</nombre>
+  </banco>
+</bancos>

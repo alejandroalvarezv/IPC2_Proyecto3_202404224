@@ -76,5 +76,66 @@ namespace Backend.Services
                 if (File.Exists(path)) File.Delete(path);
             }
         }
+        // ——— FACTURAS ———
+public List<Factura> GetFacturas()
+{
+    var path = Path.Combine(_basePath, "facturas.xml");
+    if (!File.Exists(path)) return new List<Factura>();
+
+    var doc = XDocument.Load(path);
+    return doc.Root.Elements("factura").Select(e => new Factura
+    {
+        NumeroFactura = e.Element("numeroFactura")?.Value.Trim(),
+        NITCliente = e.Element("NITCliente")?.Value.Trim(),
+        Fecha = e.Element("fecha")?.Value.Trim(),
+        Valor = double.Parse(e.Element("valor")?.Value ?? "0"),
+        SaldoPendiente = double.Parse(e.Element("saldoPendiente")?.Value ?? "0")
+    }).ToList();
+}
+
+public void SaveFacturas(List<Factura> facturas)
+{
+    var path = Path.Combine(_basePath, "facturas.xml");
+    var doc = new XDocument(new XElement("facturas",
+        facturas.Select(f => new XElement("factura",
+            new XElement("numeroFactura", f.NumeroFactura),
+            new XElement("NITCliente", f.NITCliente),
+            new XElement("fecha", f.Fecha),
+            new XElement("valor", f.Valor),
+            new XElement("saldoPendiente", f.SaldoPendiente)
+        ))
+    ));
+    doc.Save(path);
+}
+
+// ——— PAGOS ———
+public List<Pago> GetPagos()
+{
+    var path = Path.Combine(_basePath, "pagos.xml");
+    if (!File.Exists(path)) return new List<Pago>();
+
+    var doc = XDocument.Load(path);
+    return doc.Root.Elements("pago").Select(e => new Pago
+    {
+        CodigoBanco = int.Parse(e.Element("codigoBanco")?.Value ?? "0"),
+        Fecha = e.Element("fecha")?.Value.Trim(),
+        NITCliente = e.Element("NITCliente")?.Value.Trim(),
+        Valor = double.Parse(e.Element("valor")?.Value ?? "0")
+    }).ToList();
+}
+
+public void SavePagos(List<Pago> pagos)
+{
+    var path = Path.Combine(_basePath, "pagos.xml");
+    var doc = new XDocument(new XElement("pagos",
+        pagos.Select(p => new XElement("pago",
+            new XElement("codigoBanco", p.CodigoBanco),
+            new XElement("fecha", p.Fecha),
+            new XElement("NITCliente", p.NITCliente),
+            new XElement("valor", p.Valor)
+        ))
+    ));
+    doc.Save(path);
+}
     }
 }
