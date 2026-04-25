@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<config>
+  <clientes>
+    <cliente>
+      <NIT>399399-K</NIT>
+      <nombre>Almacén Guatemalteco</nombre>
+    </cliente>
+    <cliente>
+      <NIT>123456-7</NIT>
+      <nombre>Tienda La Reforma</nombre>
+    </cliente>
+    <cliente>
+      <NIT>987654-3</NIT>
+      <nombre>Comercial El Quetzal</nombre>
+    </cliente>
+  </clientes>
+  <bancos>
+    <banco>
+      <codigo>1</codigo>
+      <nombre>Banco Industrial</nombre>
+    </banco>
+    <banco>
+      <codigo>2</codigo>
+      <nombre>GyT Continental</nombre>
+    </banco>
+    <banco>
+      <codigo>3</codigo>
+      <nombre>BanRural</nombre>
+    </banco>
+    <banco>
+      <codigo>4</codigo>
+      <nombre>BAM</nombre>
+    </banco>
+  </bancos>
+</config>

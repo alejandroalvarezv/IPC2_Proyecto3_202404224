@@ -5,4 +5,14 @@
     <nombre>Almacén Guatemalteco</nombre>
     <saldo>0</saldo>
   </cliente>
+  <cliente>
+    <NIT>123456-7</NIT>
+    <nombre>Tienda La Reforma</nombre>
+    <saldo>0</saldo>
+  </cliente>
+  <cliente>
+    <NIT>987654-3</NIT>
+    <nombre>Comercial El Quetzal</nombre>
+    <saldo>0</saldo>
+  </cliente>
 </clientes>

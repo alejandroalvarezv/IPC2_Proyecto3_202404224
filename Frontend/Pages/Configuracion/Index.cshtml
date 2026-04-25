@@ -1,0 +1,80 @@
+@page
+@model Frontend.Pages.Configuracion.IndexModel
+@{
+    ViewData["Title"] = "Cargar Configuración";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card p-4">
+            <h2 class="fw-bold mb-4" style="color: #1a237e;">
+                Cargar Archivo de Configuración
+            </h2>
+            <p class="text-muted">
+                Carga un archivo <strong>config.xml</strong> con los clientes 
+                y bancos que trabajarán con ITGSA.
+            </p>
+
+            <form method="post" enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Seleccionar archivo config.xml</label>
+                    <input type="file" name="archivo" accept=".xml" 
+                           class="form-control" required />
+                </div>
+                <button type="submit" class="btn btn-primary w-100 py-2">
+                    Cargar Archivo
+                </button>
+            </form>
+
+            @if (Model.Respuesta != null)
+            {
+                <div class="mt-4">
+                    <h5 class="fw-bold text-success">Respuesta del servidor:</h5>
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <div class="card text-center p-3" 
+                                 style="border-left: 5px solid #1a237e;">
+                                <h6 class="text-muted">Clientes Creados</h6>
+                                <h2 class="fw-bold" style="color: #1a237e;">
+                                    @Model.Respuesta.ClientesCreados
+                                </h2>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card text-center p-3" 
+                                 style="border-left: 5px solid #1a237e;">
+                                <h6 class="text-muted">Clientes Actualizados</h6>
+                                <h2 class="fw-bold" style="color: #1a237e;">
+                                    @Model.Respuesta.ClientesActualizados
+                                </h2>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mt-3">
+                            <div class="card text-center p-3" 
+                                 style="border-left: 5px solid #c62828;">
+                                <h6 class="text-muted">Bancos Creados</h6>
+                                <h2 class="fw-bold" style="color: #c62828;">
+                                    @Model.Respuesta.BancosCreados
+                                </h2>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mt-3">
+                            <div class="card text-center p-3" 
+                                 style="border-left: 5px solid #c62828;">
+                                <h6 class="text-muted">Bancos Actualizados</h6>
+                                <h2 class="fw-bold" style="color: #c62828;">
+                                    @Model.Respuesta.BancosActualizados
+                                </h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            @if (Model.Error != null)
+            {
+                <div class="alert alert-danger mt-3">@Model.Error</div>
+            }
+        </div>
+    </div>
+</div>
