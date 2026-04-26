@@ -1,0 +1,97 @@
+@page
+@model Frontend.Pages.Transacciones.IndexModel
+@{
+    ViewData["Title"] = "Cargar Transacciones";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card p-4">
+            <h2 class="fw-bold mb-4" style="color: #1a237e;">
+                Cargar Archivo de Transacciones
+            </h2>
+            <p class="text-muted">
+                Carga un archivo <strong>transac.xml</strong> con facturas y pagos.
+            </p>
+
+            <form method="post" enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Seleccionar archivo transac.xml</label>
+                    <input type="file" name="archivo" accept=".xml" 
+                           class="form-control" required />
+                </div>
+                <button type="submit" class="btn btn-primary w-100 py-2">
+                    Cargar Archivo
+                </button>
+            </form>
+
+            @if (Model.Respuesta != null)
+            {
+                <div class="mt-4">
+                    <h5 class="fw-bold text-success">Respuesta del servidor:</h5>
+                    <div class="row mt-3">
+                        <div class="col-md-4">
+                            <div class="card text-center p-3" 
+                                 style="border-left: 5px solid #1a237e;">
+                                <h6 class="text-muted">Facturas Nuevas</h6>
+                                <h2 class="fw-bold" style="color: #1a237e;">
+                                    @Model.Respuesta.NuevasFacturas
+                                </h2>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card text-center p-3" 
+                                 style="border-left: 5px solid #f57f17;">
+                                <h6 class="text-muted">Duplicadas</h6>
+                                <h2 class="fw-bold" style="color: #f57f17;">
+                                    @Model.Respuesta.FacturasDuplicadas
+                                </h2>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card text-center p-3" 
+                                 style="border-left: 5px solid #c62828;">
+                                <h6 class="text-muted">Con Error</h6>
+                                <h2 class="fw-bold" style="color: #c62828;">
+                                    @Model.Respuesta.FacturasConError
+                                </h2>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mt-3">
+                            <div class="card text-center p-3" 
+                                 style="border-left: 5px solid #1a237e;">
+                                <h6 class="text-muted">Pagos Nuevos</h6>
+                                <h2 class="fw-bold" style="color: #1a237e;">
+                                    @Model.Respuesta.NuevosPagos
+                                </h2>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mt-3">
+                            <div class="card text-center p-3" 
+                                 style="border-left: 5px solid #f57f17;">
+                                <h6 class="text-muted">Duplicados</h6>
+                                <h2 class="fw-bold" style="color: #f57f17;">
+                                    @Model.Respuesta.PagosDuplicados
+                                </h2>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mt-3">
+                            <div class="card text-center p-3" 
+                                 style="border-left: 5px solid #c62828;">
+                                <h6 class="text-muted">Con Error</h6>
+                                <h2 class="fw-bold" style="color: #c62828;">
+                                    @Model.Respuesta.PagosConError
+                                </h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            @if (Model.Error != null)
+            {
+                <div class="alert alert-danger mt-3">@Model.Error</div>
+            }
+        </div>
+    </div>
+</div>
