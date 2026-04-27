@@ -1,0 +1,100 @@
+@page
+@model Frontend.Pages.EstadoCuenta.IndexModel
+@{
+    ViewData["Title"] = "Estado de Cuenta";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <div class="card p-4">
+            <h2 class="fw-bold mb-4" style="color: #1a237e;">Estado de Cuenta</h2>
+
+            <form method="post">
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-8">
+                        <label class="form-label fw-bold">
+                            NIT del cliente
+                        </label>
+                        <input type="text" name="nit" value="@Model.NitBuscado"
+                               class="form-control" placeholder="Ej: 399399-K" />
+                    </div>
+                    <div class="col-md-4">
+                        <button type="submit" class="btn btn-primary w-100 py-2">
+                            Consultar
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+            @if (Model.Error != null)
+            {
+                <div class="alert alert-danger mt-3">@Model.Error</div>
+            }
+
+            @if (Model.Clientes != null && Model.Clientes.Count > 0)
+            {
+                foreach (var cliente in Model.Clientes)
+                {
+                    <div class="card mt-4 p-3">
+                        <h5 class="fw-bold" style="color: #1a237e;">
+                            Cliente: @cliente.NIT — @cliente.Nombre
+                        </h5>
+                        <p class="mb-1">
+                            <strong>Saldo actual: 
+                            Q. @cliente.Saldo.ToString("F2")</strong>
+                        </p>
+
+                        @if (cliente.Transacciones.Count > 0)
+                        {
+                            <table class="table table-striped mt-3">
+                                <thead style="background-color: #1a237e; color: white;">
+                                    <tr>
+                                        <th>Fecha</th>
+                                        <th>Cargo</th>
+                                        <th>Abono</th>
+                                        <th>Referencia</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var t in cliente.Transacciones)
+                                    {
+                                        <tr>
+                                            <td>@t.Fecha</td>
+                                            <td>
+                                                @if (t.Tipo == "cargo")
+                                                {
+                                                    <span class="text-danger fw-bold">
+                                                        Q. @t.Valor.ToString("F2")
+                                                    </span>
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (t.Tipo == "abono")
+                                                {
+                                                    <span class="text-success fw-bold">
+                                                        Q. @t.Valor.ToString("F2")
+                                                    </span>
+                                                }
+                                            </td>
+                                            <td>@t.Referencia</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        }
+                        else
+                        {
+                            <p class="text-muted mt-2">Sin transacciones registradas.</p>
+                        }
+                    </div>
+                }
+            }
+            else if (Model.Clientes != null && Model.Clientes.Count == 0)
+            {
+                <div class="alert alert-warning mt-3">
+                    No se encontraron clientes.
+                </div>
+            }
+        </div>
+    </div>
+</div>
