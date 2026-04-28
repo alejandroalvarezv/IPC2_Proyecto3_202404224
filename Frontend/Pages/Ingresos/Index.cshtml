@@ -1,0 +1,126 @@
+@page
+@model Frontend.Pages.Ingresos.IndexModel
+@{
+    ViewData["Title"] = "Consultar Ingresos";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <div class="card p-4">
+            <h2 class="fw-bold mb-4" style="color: #1a237e;">Consultar Ingresos</h2>
+
+            <form method="post">
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold">Mes</label>
+                        <select name="mes" class="form-select">
+    <option value="1" selected="@(Model.Mes == 1)">Enero</option>
+    <option value="2" selected="@(Model.Mes == 2)">Febrero</option>
+    <option value="3" selected="@(Model.Mes == 3)">Marzo</option>
+    <option value="4" selected="@(Model.Mes == 4)">Abril</option>
+    <option value="5" selected="@(Model.Mes == 5)">Mayo</option>
+    <option value="6" selected="@(Model.Mes == 6)">Junio</option>
+    <option value="7" selected="@(Model.Mes == 7)">Julio</option>
+    <option value="8" selected="@(Model.Mes == 8)">Agosto</option>
+    <option value="9" selected="@(Model.Mes == 9)">Septiembre</option>
+    <option value="10" selected="@(Model.Mes == 10)">Octubre</option>
+    <option value="11" selected="@(Model.Mes == 11)">Noviembre</option>
+    <option value="12" selected="@(Model.Mes == 12)">Diciembre</option>
+</select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold">Año</label>
+                        <input type="number" name="anio" value="@Model.Anio" 
+                               class="form-control" placeholder="2024" />
+                    </div>
+                    <div class="col-md-4">
+                        <button type="submit" class="btn btn-primary w-100 py-2">
+                            Consultar
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+            @if (Model.Error != null)
+            {
+                <div class="alert alert-danger mt-3">@Model.Error</div>
+            }
+
+            @if (Model.Bancos != null && Model.Bancos.Count > 0)
+            {
+                <div class="mt-4">
+                    <h5 class="fw-bold text-center">Ingresos por banco</h5>
+                    <p class="text-center text-muted">
+                        Últimos 3 meses desde @Model.NombreMes/@Model.Anio
+                    </p>
+                    <canvas id="grafica" height="100"></canvas>
+                </div>
+
+                <div class="table-responsive mt-4">
+                    <table class="table table-striped">
+                        <thead style="background-color: #1a237e; color: white;">
+                            <tr>
+                                <th>Banco</th>
+                                @foreach (var mes in Model.Meses)
+                                {
+                                    <th class="text-center">@mes</th>
+                                }
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var banco in Model.Bancos)
+                            {
+                                <tr>
+                                    <td>@banco.Nombre</td>
+                                    @foreach (var total in banco.Totales)
+                                    {
+                                        <td class="text-center">Q. @total.ToString("F2")</td>
+                                    }
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    @if (Model.Bancos != null && Model.Bancos.Count > 0)
+    {
+        <script>
+            const ctx = document.getElementById('grafica').getContext('2d');
+            const meses = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Meses));
+            const bancos = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(
+                Model.Bancos.Select(b => new { nombre = b.Nombre, totales = b.Totales })));
+
+            const colores = ['#1a237e', '#c62828', '#2e7d32', '#f57f17', '#6a1b9a'];
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: bancos.map(b => b.nombre),
+                    datasets: meses.map((mes, i) => ({
+                        label: mes,
+                        data: bancos.map(b => b.totales[i]),
+                        backgroundColor: colores[i % colores.length]
+                    }))
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: { display: true, text: 'Quetzales (Q)' }
+                        }
+                    }
+                }
+            });
+        </script>
+    }
+}
