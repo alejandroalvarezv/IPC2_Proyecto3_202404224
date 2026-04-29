@@ -1,6 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Xml.Linq;
 using Backend.Services;
+using QuestPDF.Fluent;
+using QuestPDF.Infrastructure;
+using QuestPDF.Helpers;
+
+
 
 namespace Backend.Controllers
 {
@@ -126,5 +131,121 @@ namespace Backend.Controllers
 
             return Content(respuesta.ToString(), "application/xml");
         }
+
+        // GET /generarPdfEstadoCuenta?nit=399399-K
+[HttpGet("generarPdfEstadoCuenta")]
+public IActionResult GenerarPdfEstadoCuenta([FromQuery] string? nit = null)
+{
+    var clientes = _dataService.GetClientes();
+    var facturas = _dataService.GetFacturas();
+    var pagos = _dataService.GetPagos();
+    var bancos = _dataService.GetBancos();
+
+    if (!string.IsNullOrEmpty(nit))
+        clientes = clientes.Where(c => c.NIT == nit).ToList();
+
+    clientes = clientes.OrderBy(c => c.NIT).ToList();
+
+    var pdf = QuestPDF.Fluent.Document.Create(container =>
+    {
+        container.Page(page =>
+        {
+            page.Size(PageSizes.A4);
+            page.Margin(50);
+            page.DefaultTextStyle(x => x.FontSize(10));
+
+            page.Header().Text("ITGSA - Estado de Cuenta")
+                .SemiBold().FontSize(18).FontColor("#1a237e");
+
+            page.Content().Column(col =>
+            {
+                foreach (var cliente in clientes)
+                {
+                    col.Item().PaddingTop(15).Text($"Cliente: {cliente.NIT} — {cliente.Nombre}")
+                        .SemiBold().FontSize(12).FontColor("#1a237e");
+
+                    col.Item().Text($"Saldo actual: Q. {cliente.Saldo:F2}");
+
+                    var facturasCliente = facturas
+                        .Where(f => f.NITCliente == cliente.NIT)
+                        .Select(f => new {
+                            f.Fecha, Tipo = "cargo",
+                            f.Valor, Referencia = $"Fact. # {f.NumeroFactura}"
+                        });
+
+                    var pagosCliente = pagos
+                        .Where(p => p.NITCliente == cliente.NIT)
+                        .Select(p => new {
+                            p.Fecha, Tipo = "abono",
+                            p.Valor,
+                            Referencia = bancos.FirstOrDefault(b =>
+                                b.Codigo == p.CodigoBanco)?.Nombre ?? "Banco"
+                        });
+
+                    var transacciones = facturasCliente
+                        .Concat(pagosCliente)
+                        .OrderByDescending(t => t.Fecha)
+                        .ToList();
+
+                    if (transacciones.Count == 0)
+                    {
+                        col.Item().PaddingTop(5).Text("Sin transacciones registradas.")
+                            .Italic().FontColor("#888888");
+                        continue;
+                    }
+
+                    col.Item().PaddingTop(8).Table(table =>
+                    {
+                        table.ColumnsDefinition(columns =>
+                        {
+                            columns.RelativeColumn(2);
+                            columns.RelativeColumn(2);
+                            columns.RelativeColumn(2);
+                            columns.RelativeColumn(4);
+                        });
+
+                        // Header
+                        table.Header(header =>
+                        {
+                            header.Cell().Background("#1a237e")
+                                .Padding(5).Text("Fecha").FontColor("#ffffff").SemiBold();
+                            header.Cell().Background("#1a237e")
+                                .Padding(5).Text("Cargo").FontColor("#ffffff").SemiBold();
+                            header.Cell().Background("#1a237e")
+                                .Padding(5).Text("Abono").FontColor("#ffffff").SemiBold();
+                            header.Cell().Background("#1a237e")
+                                .Padding(5).Text("Referencia").FontColor("#ffffff").SemiBold();
+                        });
+
+                        // Rows
+                        foreach (var t in transacciones)
+                        {
+                            table.Cell().Padding(4).Text(t.Fecha);
+                            table.Cell().Padding(4).Text(
+                                t.Tipo == "cargo" ? $"Q. {t.Valor:F2}" : "");
+                            table.Cell().Padding(4).Text(
+                                t.Tipo == "abono" ? $"Q. {t.Valor:F2}" : "");
+                            table.Cell().Padding(4).Text(t.Referencia);
+                        }
+                    });
+
+                    col.Item().PaddingTop(5)
+                        .LineHorizontal(1).LineColor("#dddddd");
+                }
+            });
+
+            page.Footer().AlignCenter()
+                .Text(x =>
+                {
+                    x.Span("Generado el ");
+                    x.Span(DateTime.Now.ToString("dd/MM/yyyy HH:mm"));
+                });
+        });
+    });
+
+    var pdfBytes = pdf.GeneratePdf();
+    return File(pdfBytes, "application/pdf", "EstadoCuenta.pdf");
+}
     }
+    
 }

@@ -5,7 +5,6 @@ builder.Services.AddHttpClient("Backend", client =>
     client.BaseAddress = new Uri(builder.Configuration["BackendUrl"] ?? 
                                  "http://localhost:5199");
 });
-
 var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())

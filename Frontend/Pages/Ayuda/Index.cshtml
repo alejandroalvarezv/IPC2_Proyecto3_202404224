@@ -1,0 +1,146 @@
+@page
+@model Frontend.Pages.Ayuda.IndexModel
+@{
+    ViewData["Title"] = "Ayuda";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-9">
+        <div class="card p-4">
+            <h2 class="fw-bold mb-4" style="color: #1a237e;">Ayuda</h2>
+
+            <!-- Tabs -->
+            <ul class="nav nav-tabs" id="ayudaTabs">
+                <li class="nav-item">
+                    <button class="nav-link active" data-bs-toggle="tab" 
+                            data-bs-target="#estudiante">
+                        Información del Estudiante
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link" data-bs-toggle="tab" 
+                            data-bs-target="#documentacion">
+                        Documentación
+                    </button>
+                </li>
+            </ul>
+
+            <div class="tab-content mt-4">
+
+                <!-- Tab Estudiante -->
+                <div class="tab-pane fade show active" id="estudiante">
+                    <div class="card p-4" style="border-left: 5px solid #1a237e;">
+                        <h5 class="fw-bold" style="color: #1a237e;">
+                            Datos del Estudiante
+                        </h5>
+                        <hr />
+                        <p><strong>Nombre:</strong> Alejandro Emmanuel Alvarez Velasquez</p>
+                        <p><strong>Carnet:</strong> 202404224</p>
+                        <p><strong>Curso:</strong> 
+                            Introducción a la Programación y Computación 2</p>
+                        <p><strong>Facultad:</strong> Ingeniería</p>
+                        <p><strong>Universidad:</strong> 
+                            Universidad San Carlos de Guatemala</p>
+                        <p><strong>Proyecto:</strong> No. 3 — Sistema ITGSA</p>
+                    </div>
+                </div>
+
+                <!-- Tab Documentación -->
+                <div class="tab-pane fade" id="documentacion">
+                    <div class="accordion" id="docAccordion">
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button" type="button"
+                                        data-bs-toggle="collapse" 
+                                        data-bs-target="#collapseConfig">
+                                    Cargar Configuración (config.xml)
+                                </button>
+                            </h2>
+                            <div id="collapseConfig" class="accordion-collapse collapse show">
+                                <div class="accordion-body">
+                                    Permite cargar un archivo <strong>config.xml</strong> 
+                                    con el listado de clientes y bancos. Este archivo es 
+                                    incremental — si se repite un NIT o código de banco, 
+                                    los datos se actualizan automáticamente.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button"
+                                        data-bs-toggle="collapse" 
+                                        data-bs-target="#collapseTransac">
+                                    Cargar Transacciones (transac.xml)
+                                </button>
+                            </h2>
+                            <div id="collapseTransac" class="accordion-collapse collapse">
+                                <div class="accordion-body">
+                                    Permite cargar un archivo <strong>transac.xml</strong> 
+                                    con facturas y pagos. Los pagos se aplican 
+                                    automáticamente a la factura más antigua pendiente. 
+                                    Si el pago excede la deuda, el saldo queda a favor 
+                                    del cliente.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button"
+                                        data-bs-toggle="collapse" 
+                                        data-bs-target="#collapseEstado">
+                                    Estado de Cuenta
+                                </button>
+                            </h2>
+                            <div id="collapseEstado" class="accordion-collapse collapse">
+                                <div class="accordion-body">
+                                    Muestra el estado de cuenta de un cliente por NIT, 
+                                    o de todos los clientes ordenados por NIT. Incluye 
+                                    saldo actual y todas las transacciones ordenadas 
+                                    de más reciente a más antigua.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button"
+                                        data-bs-toggle="collapse" 
+                                        data-bs-target="#collapseIngresos">
+                                    Consultar Ingresos
+                                </button>
+                            </h2>
+                            <div id="collapseIngresos" class="accordion-collapse collapse">
+                                <div class="accordion-body">
+                                    Muestra una gráfica de barras con los ingresos 
+                                    por banco de los últimos 3 meses a partir del 
+                                    mes seleccionado.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button"
+                                        data-bs-toggle="collapse" 
+                                        data-bs-target="#collapseReset">
+                                    Resetear Datos
+                                </button>
+                            </h2>
+                            <div id="collapseReset" class="accordion-collapse collapse">
+                                <div class="accordion-body">
+                                    Elimina todos los datos del sistema, dejándolo 
+                                    en su estado inicial sin clientes, bancos, 
+                                    facturas ni pagos.
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
