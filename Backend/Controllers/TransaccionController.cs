@@ -89,12 +89,7 @@ namespace Backend.Controllers
                 var nit = p.Element("NITcliente")?.Value.Trim();
                 var valorStr = p.Element("valor")?.Value.Trim();
 
-                if (pagos.Any(x => x.NITCliente == nit && x.Fecha == fecha
-                    && x.CodigoBanco.ToString() == codigoStr && x.Valor.ToString() == valorStr))
-                {
-                    pagosDuplicados++;
-                    continue;
-                }
+                
 
                 // Verificar datos válidos
                 var cliente = clientes.FirstOrDefault(c => c.NIT == nit);
