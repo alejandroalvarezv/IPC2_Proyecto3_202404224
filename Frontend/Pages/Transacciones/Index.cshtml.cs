@@ -19,6 +19,7 @@ namespace Frontend.Pages.Transacciones
         private readonly IHttpClientFactory _httpClientFactory;
         public RespuestaTransac? Respuesta { get; set; }
         public string? Error { get; set; }
+        public string? RespuestaXml { get; set; }
 
         public IndexModel(IHttpClientFactory httpClientFactory)
         {
@@ -50,6 +51,8 @@ namespace Frontend.Pages.Transacciones
                 var responseXml = await response.Content.ReadAsStringAsync();
 
                 responseXml = responseXml.Trim().TrimStart('\uFEFF', '\u200B');
+                RespuestaXml = responseXml;
+
                 var doc = XDocument.Parse(responseXml);
 
                 Respuesta = new RespuestaTransac

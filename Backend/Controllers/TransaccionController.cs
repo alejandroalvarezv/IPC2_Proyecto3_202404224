@@ -23,6 +23,7 @@ namespace Backend.Controllers
             var clientes = _dataService.GetClientes();
             var facturas = _dataService.GetFacturas();
             var pagos = _dataService.GetPagos();
+            var bancos = _dataService.GetBancos();
 
             int nuevasFacturas = 0, facturasDuplicadas = 0, facturasConError = 0;
             int nuevosPagos = 0, pagosDuplicados = 0, pagosConError = 0;
@@ -44,7 +45,6 @@ namespace Backend.Controllers
                     continue;
                 }
 
-                // Verificar que el cliente existe y el valor es válido
                 var cliente = clientes.FirstOrDefault(c => c.NIT == nit);
                 if (cliente == null || !double.TryParse(valorStr, out double valor))
                 {
@@ -89,12 +89,17 @@ namespace Backend.Controllers
                 var nit = p.Element("NITcliente")?.Value.Trim();
                 var valorStr = p.Element("valor")?.Value.Trim();
 
-                
+                if (!int.TryParse(codigoStr, out int codigo))
+                {
+                    pagosConError++;
+                    continue;
+                }
 
-                // Verificar datos válidos
                 var cliente = clientes.FirstOrDefault(c => c.NIT == nit);
-                if (cliente == null || !double.TryParse(valorStr, out double valor)
-                    || !int.TryParse(codigoStr, out int codigo))
+                var banco = bancos.FirstOrDefault(b => b.Codigo == codigo);
+
+                if (cliente == null || banco == null || 
+                    !double.TryParse(valorStr, out double valor))
                 {
                     pagosConError++;
                     continue;
@@ -138,12 +143,10 @@ namespace Backend.Controllers
                 }
             }
 
-            // Guardar todo
             _dataService.SaveFacturas(facturas);
             _dataService.SavePagos(pagos);
             _dataService.SaveClientes(clientes);
 
-            // Respuesta XML
             var respuesta = new XDocument(
                 new XElement("transacciones",
                     new XElement("facturas",

@@ -1,35 +1,47 @@
 <?xml version="1.0"?>
 <config>
-  <clientes>
-    <cliente>
-      <NIT>399399-K</NIT>
-      <nombre>Almacén Guatemalteco</nombre>
-    </cliente>
-    <cliente>
-      <NIT>123456-7</NIT>
-      <nombre>Tienda La Reforma</nombre>
-    </cliente>
-    <cliente>
-      <NIT>987654-3</NIT>
-      <nombre>Comercial El Quetzal</nombre>
-    </cliente>
-  </clientes>
-  <bancos>
-    <banco>
-      <codigo>1</codigo>
-      <nombre>Banco Industrial</nombre>
-    </banco>
-    <banco>
-      <codigo>2</codigo>
-      <nombre>GyT Continental</nombre>
-    </banco>
-    <banco>
-      <codigo>3</codigo>
-      <nombre>BanRural</nombre>
-    </banco>
-    <banco>
-      <codigo>4</codigo>
-      <nombre>BAM</nombre>
-    </banco>
-  </bancos>
+    <clientes>
+        <cliente>
+            <NIT>A1B2C3</NIT>
+            <nombre>Almacén Guatemalteco</nombre>
+        </cliente>
+        <cliente>
+            <NIT>D4E5F6</NIT>
+            <nombre>Ferretería El Progreso</nombre>
+        </cliente>
+        <cliente>
+            <NIT>G7H8I9</NIT>
+            <nombre>Almacén Guatemalteco</nombre>
+        </cliente>
+        <cliente>
+            <NIT>J1K2L3</NIT>
+            <nombre>Librería Central</nombre>
+        </cliente>
+        <cliente>
+            <NIT>M4N5O6</NIT>
+            <nombre>Farmacia San José</nombre>
+        </cliente>
+    </clientes>
+    <bancos>
+        <banco>
+            <codigo>1</codigo>
+            <nombre>Banco Industrial</nombre>
+        </banco>
+        <banco>
+            <codigo>2</codigo>
+            <nombre>Banco Agromercantil</nombre>
+        </banco>
+        <banco>
+            <codigo>3</codigo>
+            <nombre>Banco de Desarrollo Rural</nombre>
+        </banco>
+        <banco>
+            <codigo>2</codigo>
+            <nombre>Banco Promerica</nombre>
+        </banco>
+        <banco>
+            <codigo>4</codigo>
+            <nombre>Banco GYT Continental</nombre>
+        </banco>
+    </bancos>
 </config>

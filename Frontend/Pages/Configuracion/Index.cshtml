@@ -68,6 +68,17 @@
                             </div>
                         </div>
                     </div>
+
+                    @if (Model.RespuestaXml != null)
+                    {
+                        <div class="mt-3 text-end">
+                            <a href="data:application/xml;charset=utf-8,@Uri.EscapeDataString(Model.RespuestaXml)"
+                               download="respuestaConfig.xml"
+                               class="btn btn-success">
+                                Descargar XML de Respuesta
+                            </a>
+                        </div>
+                    }
                 </div>
             }
 

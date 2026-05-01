@@ -132,10 +132,9 @@ namespace Backend.Controllers
             return Content(respuesta.ToString(), "application/xml");
         }
 
-        // GET /generarPdfEstadoCuenta?nit=399399-K
-[HttpGet("generarPdfEstadoCuenta")]
-public IActionResult GenerarPdfEstadoCuenta([FromQuery] string? nit = null)
-{
+        [HttpGet("generarPdfEstadoCuenta")]
+        public IActionResult GenerarPdfEstadoCuenta([FromQuery] string? nit = null)
+    {
     var clientes = _dataService.GetClientes();
     var facturas = _dataService.GetFacturas();
     var pagos = _dataService.GetPagos();
@@ -246,6 +245,133 @@ public IActionResult GenerarPdfEstadoCuenta([FromQuery] string? nit = null)
     var pdfBytes = pdf.GeneratePdf();
     return File(pdfBytes, "application/pdf", "EstadoCuenta.pdf");
 }
+
+
+
+        [HttpGet("generarPdfIngresos")]
+    public IActionResult GenerarPdfIngresos([FromQuery] int mes, [FromQuery] int anio)
+{
+    var pagos = _dataService.GetPagos();
+    var bancos = _dataService.GetBancos();
+
+    var meses = new List<(int Mes, int Anio)>();
+    int mesTemp = mes, anioTemp = anio;
+    for (int i = 0; i < 3; i++)
+    {
+        meses.Add((mesTemp, anioTemp));
+        mesTemp--;
+        if (mesTemp == 0) { mesTemp = 12; anioTemp--; }
+    }
+
+    string[] nombresMeses = {
+        "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+        "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+    };
+
+    var pdf = Document.Create(container =>
+    {
+        container.Page(page =>
+        {
+            page.Size(PageSizes.A4);
+            page.Margin(50);
+            page.DefaultTextStyle(x => x.FontSize(10));
+
+            page.Header().Column(col =>
+            {
+                col.Item().Text("ITGSA - Reporte de Ingresos por Banco")
+                    .SemiBold().FontSize(18).FontColor("#1a237e");
+                col.Item().Text(
+                    $"Período: {nombresMeses[meses[2].Mes - 1]}/{meses[2].Anio} " +
+                    $"— {nombresMeses[meses[0].Mes - 1]}/{meses[0].Anio}")
+                    .FontSize(11).FontColor("#555555");
+            });
+
+            page.Content().PaddingTop(20).Table(table =>
+            {
+                table.ColumnsDefinition(columns =>
+                {
+                    columns.RelativeColumn(4);
+                    columns.RelativeColumn(2);
+                    columns.RelativeColumn(2);
+                    columns.RelativeColumn(2);
+                });
+
+                table.Header(header =>
+                {
+                    header.Cell().Background("#1a237e")
+                        .Padding(5).Text("Banco")
+                        .FontColor("#ffffff").SemiBold();
+                    foreach (var m in meses)
+                    {
+                        header.Cell().Background("#1a237e")
+                            .Padding(5)
+                            .Text($"{nombresMeses[m.Mes - 1].Substring(0, 3)}-{m.Anio.ToString().Substring(2)}")
+                            .FontColor("#ffffff").SemiBold();
+                    }
+                });
+
+                // Rows
+                bool alternado = false;
+                foreach (var banco in bancos)
+                {
+                    var bg = alternado ? "#f5f5f5" : "#ffffff";
+                    alternado = !alternado;
+
+                    table.Cell().Background(bg).Padding(5).Text(banco.Nombre);
+
+                    foreach (var m in meses)
+                    {
+                        var total = pagos
+                            .Where(p => p.CodigoBanco == banco.Codigo)
+                            .Where(p => {
+                                var partes = p.Fecha?.Split('/');
+                                if (partes?.Length == 3)
+                                    return int.Parse(partes[1]) == m.Mes
+                                        && int.Parse(partes[2]) == m.Anio;
+                                return false;
+                            })
+                            .Sum(p => p.Valor);
+
+                        table.Cell().Background(bg).Padding(5)
+                            .Text($"Q. {total:F2}");
+                    }
+                }
+
+                // Fila de totales
+                table.Cell().Background("#1a237e")
+                    .Padding(5).Text("TOTAL")
+                    .FontColor("#ffffff").SemiBold();
+
+                foreach (var m in meses)
+                {
+                    var totalMes = pagos
+                        .Where(p => {
+                            var partes = p.Fecha?.Split('/');
+                            if (partes?.Length == 3)
+                                return int.Parse(partes[1]) == m.Mes
+                                    && int.Parse(partes[2]) == m.Anio;
+                            return false;
+                        })
+                        .Sum(p => p.Valor);
+
+                    table.Cell().Background("#1a237e")
+                        .Padding(5).Text($"Q. {totalMes:F2}")
+                        .FontColor("#ffffff").SemiBold();
+                }
+            });
+
+            page.Footer().AlignCenter().Text(x =>
+            {
+                x.Span("Generado el ");
+                x.Span(DateTime.Now.ToString("dd/MM/yyyy HH:mm"));
+            });
+        });
+    });
+
+    var pdfBytes = pdf.GeneratePdf();
+    return File(pdfBytes, "application/pdf", "IngresosPorBanco.pdf");
+}
+
     }
     
 }

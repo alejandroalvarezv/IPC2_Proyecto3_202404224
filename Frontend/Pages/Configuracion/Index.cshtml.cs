@@ -17,6 +17,7 @@ namespace Frontend.Pages.Configuracion
         private readonly IHttpClientFactory _httpClientFactory;
         public RespuestaConfig? Respuesta { get; set; }
         public string? Error { get; set; }
+        public string? RespuestaXml { get; set; }
 
         public IndexModel(IHttpClientFactory httpClientFactory)
         {
@@ -35,25 +36,22 @@ namespace Frontend.Pages.Configuracion
 
             try
             {
-                // Leer el archivo
                 string xmlContent;
                 using (var reader = new StreamReader(archivo.OpenReadStream()))
                 {
                     xmlContent = await reader.ReadToEndAsync();
                 }
 
-                // Enviarlo al backend
                 var client = _httpClientFactory.CreateClient("Backend");
                 var content = new StringContent(xmlContent, 
                               System.Text.Encoding.UTF8, "application/xml");
                 var response = await client.PostAsync("/grabarConfiguracion", content);
-var responseXml = await response.Content.ReadAsStringAsync();
+                var responseXml = await response.Content.ReadAsStringAsync();
 
-// Agrega esta línea temporal para ver qué llega
-Console.WriteLine("RESPUESTA BACKEND: " + responseXml);
+                responseXml = responseXml.Trim().TrimStart('\uFEFF', '\u200B');
+                RespuestaXml = responseXml;
 
-responseXml = responseXml.Trim().TrimStart('\uFEFF', '\u200B');
-var doc = XDocument.Parse(responseXml);
+                var doc = XDocument.Parse(responseXml);
                 Respuesta = new RespuestaConfig
                 {
                     ClientesCreados = int.Parse(doc.Root?

@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<transacciones>
+    <facturas>
+        <!-- Facturas con NITs existentes -->
+        <factura>
+            <numeroFactura>FAC001</numeroFactura>
+            <NITcliente>A1B2C3</NITcliente>
+            <fecha>01/04/2026</fecha>
+            <valor>1500</valor>
+        </factura>
+        <factura>
+            <numeroFactura>FAC002</numeroFactura>
+            <NITcliente>D4E5F6</NITcliente>
+            <fecha>05/04/2026</fecha>
+            <valor>2300</valor>
+        </factura>
+        <factura>
+            <numeroFactura>FAC003</numeroFactura>
+            <NITcliente>J1K2L3</NITcliente>
+            <fecha>10/04/2026</fecha>
+            <valor>875</valor>
+        </factura>
+        <factura>
+            <numeroFactura>FAC004</numeroFactura>
+            <NITcliente>M4N5O6</NITcliente>
+            <fecha>15/04/2026</fecha>
+            <valor>3200</valor>
+        </factura>
+        <!-- Factura con NIT de cliente que NO existe en config.xml -->
+        <factura>
+            <numeroFactura>FAC005</numeroFactura>
+            <NITcliente>Z9Z9Z9</NITcliente>
+            <fecha>18/04/2026</fecha>
+            <valor>1100</valor>
+        </factura>
+    </facturas>
+    <pagos>
+        <!-- Pagos con codigos de banco y NITs existentes -->
+        <pago>
+            <codigoBanco>1</codigoBanco>
+            <fecha>02/04/2026</fecha>
+            <NITcliente>A1B2C3</NITcliente>
+            <valor>1500</valor>
+        </pago>
+        <pago>
+            <codigoBanco>2</codigoBanco>
+            <fecha>06/04/2026</fecha>
+            <NITcliente>D4E5F6</NITcliente>
+            <valor>2300</valor>
+        </pago>
+        <pago>
+            <codigoBanco>3</codigoBanco>
+            <fecha>11/04/2026</fecha>
+            <NITcliente>J1K2L3</NITcliente>
+            <valor>875</valor>
+        </pago>
+        <!-- Pago con codigo de banco que NO existe en config.xml -->
+        <pago>
+            <codigoBanco>99</codigoBanco>
+            <fecha>16/04/2026</fecha>
+            <NITcliente>M4N5O6</NITcliente>
+            <valor>3200</valor>
+        </pago>
+        <!-- Pago con codigo de banco Y NIT de cliente que NO existen en config.xml -->
+        <pago>
+            <codigoBanco>88</codigoBanco>
+            <fecha>20/04/2026</fecha>
+            <NITcliente>X5X5X5</NITcliente>
+            <valor>500</valor>
+        </pago>
+    </pagos>
+</transacciones>
